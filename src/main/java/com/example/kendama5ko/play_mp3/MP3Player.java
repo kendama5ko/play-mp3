@@ -52,6 +52,9 @@ public class MP3Player extends Application {
                 // 新しいファイルを再生
                 Media media = new Media(selectedAudioFile.toURI().toString());
                 mediaPlayer = new MediaPlayer(media);
+                
+                // ボリュームスライダーの音量を反映して再生を開始
+                mediaPlayer.setVolume(volumeSlider.getValue());
                 mediaPlayer.play();
             }
         });
