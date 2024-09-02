@@ -4,9 +4,13 @@ package com.example.kendama5ko.play_mp3;
 import java.io.File;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -22,9 +26,9 @@ public class MP3Player extends Application {
         primaryStage.setTitle("MP3 Player");
 
 				// スライダーの作成と初期設定
-        Slider volumeSlider = new Slider(0, 1, 0.5);  // 最小0、最大1、初期値0.5
-        volumeSlider.setShowTickLabels(true);
-        volumeSlider.setShowTickMarks(true);
+        Slider volumeSlider = new Slider(0, 1, 0.3);  // 最小0、最大1、初期値0.3
+//        volumeSlider.setShowTickLabels(true);
+//        volumeSlider.setShowTickMarks(true);
         
         
         // スライダーの値を変更することで音量を調整
@@ -68,10 +72,21 @@ public class MP3Player extends Application {
         Button stopButton = new Button("Stop");
         stopButton.setOnAction(e -> mediaPlayer.stop());
 
-        VBox vBox = new VBox(10);
-        vBox.getChildren().addAll(selectFileButton, playButton, pauseButton, stopButton, volumeSlider);
+        // レイアウト
+        HBox hBox = new HBox(10);
+        hBox.setPadding(new Insets(100, 10, 10, 10));
+        hBox.setAlignment(Pos.CENTER);
+        hBox.getChildren().addAll( playButton, pauseButton, stopButton);
+        
+        BorderPane border = new BorderPane();
+        border.setLeft(selectFileButton);
+        border.setRight(volumeSlider);
+        BorderPane.setAlignment(volumeSlider, Pos.CENTER);
+        
+        VBox rootVBox = new VBox(10);
+        rootVBox.getChildren().addAll(hBox, border);
 
-        Scene scene = new Scene(vBox, 300, 200);
+        Scene scene = new Scene(rootVBox, 300, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
