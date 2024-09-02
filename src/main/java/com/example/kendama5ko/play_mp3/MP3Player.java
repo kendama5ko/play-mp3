@@ -6,6 +6,7 @@ import java.io.File;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -20,7 +21,18 @@ public class MP3Player extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("MP3 Player");
 
-
+				// スライダーの作成と初期設定
+        Slider volumeSlider = new Slider(0, 1, 0.5);  // 最小0、最大1、初期値0.5
+        volumeSlider.setShowTickLabels(true);
+        volumeSlider.setShowTickMarks(true);
+        
+        
+        // スライダーの値を変更することで音量を調整
+	        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+	        	if (mediaPlayer != null) {
+	        		mediaPlayer.setVolume(newValue.doubleValue());
+	        	}
+	        });
 
         // ファイルを選択するボタンを作成
         Button selectFileButton = new Button("MP3ファイルを選択");
@@ -54,7 +66,7 @@ public class MP3Player extends Application {
         stopButton.setOnAction(e -> mediaPlayer.stop());
 
         VBox vBox = new VBox(10);
-        vBox.getChildren().addAll(selectFileButton, playButton, pauseButton, stopButton);
+        vBox.getChildren().addAll(selectFileButton, playButton, pauseButton, stopButton, volumeSlider);
 
         Scene scene = new Scene(vBox, 300, 200);
         primaryStage.setScene(scene);
