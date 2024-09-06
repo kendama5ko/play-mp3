@@ -1,6 +1,26 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java,maven,eclipse,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,maven,eclipse,windows
 
+# Ignore all .idea folder files
+.idea/
+
+# But track important project configuration files
+!.idea/misc.xml
+!.idea/modules.xml
+!.idea/vcs.xml
+!.idea/runConfigurations/
+
+# Ignore user-specific workspace settings
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries
+
+# Ignore Gradle files (if you use Gradle)
+.gradle/
+build/
+out/
+
 ### Eclipse ###
 .metadata
 bin/
