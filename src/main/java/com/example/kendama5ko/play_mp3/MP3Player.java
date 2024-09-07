@@ -45,7 +45,9 @@ public class MP3Player extends Application {
         // スライダーの値を変更することで音量を調整
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (mediaPlayer != null) {
-                mediaPlayer.setVolume(newValue.doubleValue());
+                // 2乗して対数的に変換する（こちらの方が80%-100%でも音量の変化を感じられる）
+                double volume = Math.pow(newValue.doubleValue(), 2);
+                mediaPlayer.setVolume(volume);
             }
         });
 
