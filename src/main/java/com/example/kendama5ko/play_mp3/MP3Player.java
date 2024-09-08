@@ -39,17 +39,8 @@ public class MP3Player extends Application {
                 addListener((observable, oldTime, newTime) -> playingTimeSlider());
         }
 
-        // スライダーの作成と初期設定
-        volumeSlider = new Slider(0, 1, 0.3);  // 最小0、最大1、初期値0.3
-
-        // スライダーの値を変更することで音量を調整
-        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (mediaPlayer != null) {
-                // 2乗して対数的に変換する（こちらの方が80%-100%でも音量の変化を感じられる）
-                double volume = Math.pow(newValue.doubleValue(), 2);
-                mediaPlayer.setVolume(volume);
-            }
-        });
+        // volumeSliderを作成
+        initializeVolumeSlider();
 
         // ファイルを選択するボタンを作成
         Button selectFileButton = createSelectFileButton(primaryStage,
@@ -97,9 +88,9 @@ public class MP3Player extends Application {
 
     /**
      * ファイルを選択するダイアログを表示するためのボタンを作成
-     * @param primaryStage
-     * @param volumeSlider
-     * @return
+     * @param primaryStage 最上位のJavaFXコンテナ
+     * @param volumeSlider 音量を制御するためのスライダー
+     * @return ファイルを選択するボタン
      */
     private Button createSelectFileButton(Stage primaryStage,
                                           Slider volumeSlider) {
@@ -141,11 +132,22 @@ public class MP3Player extends Application {
         return selectFileButton;
     }
 
+    /**
+     * ボリュームスライダーを作成
+     */
+    private void initializeVolumeSlider() {
+        volumeSlider = new Slider(0, 1, 0.3); // 0から1の範囲で、デフォルト値0.5
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (mediaPlayer != null) {
+                updateVolume(volumeSlider);
+            }
+        });
+    }
 
 
     /**
      * 音量を更新する
-     * @param volumeSlider
+     * @param volumeSlider 音量を制御するためのスライダー
      */
     private void updateVolume(Slider volumeSlider) {
         if (mediaPlayer != null) {
