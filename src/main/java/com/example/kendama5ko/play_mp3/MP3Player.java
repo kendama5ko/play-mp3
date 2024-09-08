@@ -23,6 +23,7 @@ public class MP3Player extends Application {
 
     private MediaPlayer mediaPlayer;
     private Slider timeSlider;
+    private Slider volumeSlider;
 
     @Override
     public void start(Stage primaryStage) {
@@ -34,13 +35,12 @@ public class MP3Player extends Application {
 
         // メディアの進行に合わせてスライダーを動かす
         if (mediaPlayer != null) {
-        mediaPlayer.currentTimeProperty().addListener((observable, oldTime, newTime) -> {
-            playingTimeSlider();
-        });
+        mediaPlayer.currentTimeProperty().
+                addListener((observable, oldTime, newTime) -> playingTimeSlider());
         }
 
         // スライダーの作成と初期設定
-        Slider volumeSlider = new Slider(0, 1, 0.3);  // 最小0、最大1、初期値0.3
+        volumeSlider = new Slider(0, 1, 0.3);  // 最小0、最大1、初期値0.3
 
         // スライダーの値を変更することで音量を調整
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -52,7 +52,8 @@ public class MP3Player extends Application {
         });
 
         // ファイルを選択するボタンを作成
-        Button selectFileButton = createSelectFileButton(primaryStage, volumeSlider);
+        Button selectFileButton = createSelectFileButton(primaryStage,
+                volumeSlider);
 
         Button playButton = new Button("Play");
         playButton.setOnAction(e -> mediaPlayer.play());
@@ -100,7 +101,8 @@ public class MP3Player extends Application {
      * @param volumeSlider
      * @return
      */
-    private Button createSelectFileButton(Stage primaryStage, Slider volumeSlider) {
+    private Button createSelectFileButton(Stage primaryStage,
+                                          Slider volumeSlider) {
         Button selectFileButton = new Button("MP3ファイルを選択");
         String[] extensions = {"*.mp3", "*.wav", "*.m4a"};
 
@@ -121,14 +123,37 @@ public class MP3Player extends Application {
                 Media media = new Media(selectedAudioFile.toURI().toString());
                 mediaPlayer = new MediaPlayer(media);
 
+                // 再生が始まったらスライダーの最大値を設定
+                mediaPlayer.setOnReady(() -> {
+                    Duration totalTime = mediaPlayer.getMedia().getDuration();
+                    timeSlider.setMax(totalTime.toSeconds());
+                });
+
+                // 再生スライダーを再生時間に合わせる
+                mediaPlayer.currentTimeProperty().
+                        addListener((observable, oldTime, newTime) -> playingTimeSlider());
+
                 // ボリュームスライダーの音量を反映して再生を開始
-                mediaPlayer.setVolume(volumeSlider.getValue());
+                updateVolume(volumeSlider);
                 mediaPlayer.play();
             }
         });
         return selectFileButton;
     }
 
+
+
+    /**
+     * 音量を更新する
+     * @param volumeSlider
+     */
+    private void updateVolume(Slider volumeSlider) {
+        if (mediaPlayer != null) {
+            double volume = volumeSlider.getValue();
+            volume = Math.pow(volume, 2);
+            mediaPlayer.setVolume(volume);
+        }
+    }
     /**
      * スライダーをメディアの進行に合わせて進める
      */
