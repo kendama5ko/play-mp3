@@ -1,16 +1,13 @@
 package com.example.kendama5ko.play_mp3;
 
-
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
@@ -18,6 +15,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 public class MP3Player extends Application {
 
@@ -26,7 +25,7 @@ public class MP3Player extends Application {
     private Slider volumeSlider;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("MP3 Player");
 
 
@@ -77,9 +76,19 @@ public class MP3Player extends Application {
         border.setLeft(selectFileButton);
         BorderPane.setAlignment(volumeSlider, Pos.CENTER);
 
+        // FXMLファイルの読込
+        String fxmlPath = "/com/example/kendama5ko/play_mp3/MP3PlayerLayout.fxml";
+        URL location = getClass().getResource(fxmlPath);
+        FXMLLoader fxmlLoader = new FXMLLoader(location);
+
+        // シーングラフの作成
+        //fxmlLoader.setRoot( new VBox() );
+        AnchorPane fxmlPane = (AnchorPane) fxmlLoader.load();
 
         VBox rootVBox = new VBox(10);
-        rootVBox.getChildren().addAll(sliderHBox, playControlButtonHBox, border);
+        rootVBox.getChildren().addAll(fxmlPane, sliderHBox,
+                playControlButtonHBox,
+                border);
 
         Scene scene = new Scene(rootVBox, 400, 200);
         primaryStage.setScene(scene);
