@@ -11,6 +11,10 @@
             fx:controller="com.example.kendama5ko.play_mp3.LayoutController"
             prefHeight="400.0" prefWidth="600.0">
     <children>
-        <Slider fx:id="timeSlider"></Slider>
+        <HBox>
+            <Slider fx:id="timeSlider"></Slider>
+            <Slider fx:id="volumeSlider"></Slider>
+
+        </HBox>
     </children>
 </AnchorPane>
