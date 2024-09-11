@@ -83,7 +83,11 @@ public class MP3Player extends Application {
 
         // シーングラフの作成
         //fxmlLoader.setRoot( new VBox() );
-        AnchorPane fxmlPane = (AnchorPane) fxmlLoader.load();
+        AnchorPane fxmlPane = fxmlLoader.load();
+
+        // MP3PlayerのインスタンスをLayoutControllerに渡す
+        LayoutController layoutController = fxmlLoader.getController();
+        layoutController.setMP3Player(this);
 
         VBox rootVBox = new VBox(10);
         rootVBox.getChildren().addAll(fxmlPane, sliderHBox,
@@ -101,7 +105,7 @@ public class MP3Player extends Application {
      * @param volumeSlider 音量を制御するためのスライダー
      * @return ファイルを選択するボタン
      */
-    private Button createSelectFileButton(Stage primaryStage,
+    public Button createSelectFileButton(Stage primaryStage,
                                           Slider volumeSlider) {
         Button selectFileButton = new Button("MP3ファイルを選択");
         String[] extensions = {"*.mp3", "*.wav", "*.m4a"};
@@ -144,7 +148,7 @@ public class MP3Player extends Application {
     /**
      * ボリュームスライダーを作成
      */
-    private void initializeVolumeSlider() {
+    public void initializeVolumeSlider() {
         volumeSlider = new Slider(0, 1, 0.3); // 0から1の範囲で、デフォルト値0.5
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (mediaPlayer != null) {
@@ -158,7 +162,7 @@ public class MP3Player extends Application {
      * 音量を更新する
      * @param volumeSlider 音量を制御するためのスライダー
      */
-    private void updateVolume(Slider volumeSlider) {
+    public void updateVolume(Slider volumeSlider) {
         if (mediaPlayer != null) {
             double volume = volumeSlider.getValue();
             volume = Math.pow(volume, 2);
